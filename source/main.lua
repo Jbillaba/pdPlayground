@@ -7,9 +7,12 @@ import "scripts/libraries/LDtk"
 import "scripts/libraries/AnimatedSprite"
 
 --game files 
+import "scripts/GameScene"
 import "scripts/player"
 
-Player(200,120)
+
+GameScene()
+
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics 

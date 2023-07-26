@@ -8,7 +8,8 @@ local k_up = pd.kButtonUp
 
 class("Player").extends(AnimatedSprite)
 
-function Player:init(x,y)
+function Player:init(x,y,gameManager)
+    self.gameManager = gameManager
     --state machine
     local playerImageTable = gfx.imagetable.new("images/player-table-16-16")
     Player.super.init(self, playerImageTable)
