@@ -8,12 +8,30 @@ class("GameScene").extends()
 
 function GameScene:init()
     self:goToLevel("Level_0")
-    self.spawnX = 12 * 16 
-    self.spawnY = 7 * 16
+    self.spawnX = 2 * 16 
+    self.spawnY = 11 * 16
 
     self.player = Player(self.spawnX, self.spawnY, self)
 end
 
+function GameScene:enterRoom(direction)
+    local level = ldtk.get_neighbours(self.levelName, direction)[1]
+    self:goToLevel(level)
+    self.player:add()
+    local spawnX, spawnY
+    if direction == "north" then
+        spawnX, spawnY = self.player.x, 240
+    elseif direction == "south" then
+        spawnX, spawnY = self.player.x, 0
+    elseif direction == "east" then
+        spawnX, spawnY = 0, self.player.y
+    elseif direction == "west" then
+        spawnX, spawnY = 400, self.player.y
+    end
+    self.player:moveTo(spawnX, spawnY)
+    self.spawnX = spawnX
+    self.spawnY = spawnY
+end
 
 function GameScene:goToLevel(level_name)
     gfx.sprite.removeAll()
