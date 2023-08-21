@@ -13,6 +13,7 @@ function Player:init(x, y, gameManager)
     self:addState("idle", 1, 1)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
+    self:addState("climb", 3,3)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -37,9 +38,12 @@ function Player:init(x, y, gameManager)
     self.touchingCeiling = false
     self.touchingWall = false 
     self.dead = false
-    self.jumpsAvailable = 2
+    self.doubleJumpAvailable = true 
+    self.climbAvailable = false
+   
 
 end
+
 
 function Player:collisionResponse(other)
     return gfx.sprite.kCollisionTypeSlide
@@ -85,6 +89,8 @@ function Player:handleState()
         self:applyGravity()
         self:applyDrag(self.drag)
         self:handleAirInput()
+    elseif self.currentState == "climb" then
+        self:handleGroundInput()
     end
 end
 
@@ -105,15 +111,15 @@ function Player:handleMovementAndCollisions()
         
         if collisionType == gfx.sprite.kCollisionTypeSlide then
             if collision.normal.y == -1 then
+                self.doubleJumpAvailable = true
                 self.touchingGround = true
-                self.jumpsAvailable = 2 
                 elseif collision.normal.y == 1 then
                     self.touchingCeiling = true
                 end
-        
-                if collision.normal.x ~= 0 then
-                    self.touchingWall = true
-                end
+            end
+            if collision.normal.x ~= 0 then
+                self.climbAvailable = true
+                self.touchingWall = true
             end
         end
      
@@ -131,7 +137,7 @@ function Player:handleMovementAndCollisions()
     elseif self.y < 0 then
         self.gameManager:enterRoom("north")
     elseif self.y > 240 then
-        self.gameManager:enterRoom("south")
+        self:die()
     end
 
     if died then
@@ -156,20 +162,20 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
-    elseif pd.buttonJustPressed(pd.kButtonB) then
-        print("b button is hit")
+    elseif pd.buttonIsPressed(pd.kButtonB) and self.climbAvailable then
+        self:changeToClimbState()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
-    elseif pd.buttonIsPressed(pd.kButtonRight) then
-        self:changeToRunState("right")
+    elseif pd.buttonIsPressed(pd.kButtonRight)  then
+        self:changeToRunState("right") 
     else
         self:changeToIdleState()
     end
 end
 
 function Player:handleAirInput()
-    if self:playerJumped()  then
-        self.jumpsAvailable = 0
+    if self:playerJumped() and self.doubleJumpAvailable then
+        self.doubleJumpAvailable = false
         self:changeToJumpState()
     elseif pd.buttonJustPressed(pd.kButtonB)  then
         print("b button is pressed")
@@ -181,12 +187,9 @@ function Player:handleAirInput()
 end
 
 function Player:changeToJumpState()
-    if self.jumpsAvailable == 0 then
-        return
-    else self.yVelocity = self.jumpVelocity
+     self.yVelocity = self.jumpVelocity
         self.jumpBuffer = 0
         self:changeState("jump")
-    end
 end
 
 -- state Transitions 
@@ -204,6 +207,11 @@ function Player:changeToRunState(direction)
         self.globalFlip = 0
     end
     self:changeState("run")
+end
+
+function Player:changeToClimbState()
+    print("now were climbing with power !")
+
 end
 
 function Player:changeToFallState()

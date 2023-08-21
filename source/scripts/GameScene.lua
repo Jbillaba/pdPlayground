@@ -14,6 +14,10 @@ function GameScene:init()
     self.player = Player(self.spawnX, self.spawnY, self)
 end
 
+function GameScene:resetPlayer()
+    self.player:moveTo(self.spawnX, self.spawnY)
+end
+
 function GameScene:enterRoom(direction)
     local level = ldtk.get_neighbours(self.levelName, direction)[1]
     self:goToLevel(level)
