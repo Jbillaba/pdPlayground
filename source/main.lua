@@ -9,6 +9,7 @@ import "scripts/libraries/AnimatedSprite"
 --game files 
 import "scripts/GameScene"
 import "scripts/player"
+import "scripts/screenShake"
 
 
 GameScene()

@@ -136,7 +136,7 @@ function Player:handleMovementAndCollisions()
     elseif self.x > 400 then
         self.gameManager:enterRoom("east")
     elseif self.y < 0 then
-        self.gameManager:enterRoom("north")
+        self.yVelocity  = 0
     elseif self.y > 240 then
         self:die()
     end
@@ -216,7 +216,6 @@ function Player:changeToClimbState()
  
 
     self:changeState("climb")
-
 end
 
 function Player:changeToFallState()
