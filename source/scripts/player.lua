@@ -28,7 +28,6 @@ function Player:init(x, y, gameManager)
     self.jumpVelocity = -8
     self.drag = 0.1
     self.minimumAirSpeed = 0.5
-
     self.jumpBufferAmount = 5
     self.jumpBuffer = 0
 
@@ -40,6 +39,7 @@ function Player:init(x, y, gameManager)
     self.dead = false
     self.doubleJumpAvailable = true 
     self.climbAvailable = false
+    
    
 
 end
@@ -77,19 +77,20 @@ end
 
 function Player:handleState()
     if self.currentState == "idle" then
-        self:applyGravity() 
+        self:applyGravity(true) 
         self:handleGroundInput()
     elseif self.currentState == "run" then
-        self:applyGravity() 
+        self:applyGravity(true) 
         self:handleGroundInput()
     elseif self.currentState == "jump" then
         if self.touchingGround then
             self:changeToIdleState()
         end
-        self:applyGravity()
+        self:applyGravity(true)
         self:applyDrag(self.drag)
         self:handleAirInput()
     elseif self.currentState == "climb" then
+        self:applyGravity(false)
         self:handleGroundInput()
     end
 end
@@ -162,7 +163,7 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
-    elseif pd.buttonIsPressed(pd.kButtonB) and self.climbAvailable then
+    elseif pd.buttonIsPressed(pd.kButtonB) and self.climbAvailable and pd.buttonIsPressed(pd.kButtonUp)then
         self:changeToClimbState()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
@@ -177,6 +178,8 @@ function Player:handleAirInput()
     if self:playerJumped() and self.doubleJumpAvailable then
         self.doubleJumpAvailable = false
         self:changeToJumpState()
+    elseif self:playerJumped() and self.climbAvailable then
+        self:changeToClimbState()
     elseif pd.buttonJustPressed(pd.kButtonB)  then
         print("b button is pressed")
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
@@ -187,9 +190,9 @@ function Player:handleAirInput()
 end
 
 function Player:changeToJumpState()
-     self.yVelocity = self.jumpVelocity
-        self.jumpBuffer = 0
-        self:changeState("jump")
+    self.yVelocity = self.jumpVelocity
+    self.jumpBuffer = 0
+    self:changeState("jump")
 end
 
 -- state Transitions 
@@ -210,7 +213,9 @@ function Player:changeToRunState(direction)
 end
 
 function Player:changeToClimbState()
-    print("now were climbing with power !")
+ 
+
+    self:changeState("climb")
 
 end
 
@@ -220,11 +225,11 @@ end
 
 
 -- physics helper functions 
-function Player:applyGravity()
+function Player:applyGravity(enableGravity) 
     self.yVelocity += self.gravity
-    if self.touchingGround or self.touchingCeiling then
-        self.yVelocity = 0
-    end
+        if self.touchingGround or self.touchingCeiling then
+            self.yVelocity = 0
+        end
 end
 
 function Player:applyDrag(amount)
