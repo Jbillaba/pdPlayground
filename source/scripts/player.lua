@@ -119,14 +119,13 @@ function Player:handleMovementAndCollisions()
         
         if collisionType == gfx.sprite.kCollisionTypeSlide then
             if collision.normal.y == -1 then
-                self.doubleJumpAvailable = true
+                self.dashAvailable = true
                 self.touchingGround = true
                 elseif collision.normal.y == 1 then
                     self.touchingCeiling = true
                 end
             end
             if collision.normal.x ~= 0 then
-                self.climbAvailable = true
                 self.touchingWall = true
             end
         end
@@ -184,8 +183,6 @@ end
 function Player:handleAirInput()
     if self:playerJumped() then
         return
-    elseif self:playerJumped() and self.climbAvailable then
-        self:changeToClimbState()
     elseif pd.buttonJustPressed(pd.kButtonB)  then
         return
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
