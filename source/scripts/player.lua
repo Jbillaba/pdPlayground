@@ -13,7 +13,7 @@ function Player:init(x, y, gameManager)
     self:addState("idle", 1, 1)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
-    self:addState("climb", 3,3)
+    self:addState("dash", 3,3)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -31,14 +31,19 @@ function Player:init(x, y, gameManager)
     self.jumpBufferAmount = 5
     self.jumpBuffer = 0
 
+    --dash
+    self.dashSpeed = 10
+    self.dashAvailable = true
+    self.dashMinimumSpeed = 3
+    self.dashDrag = 0.8    
+
 
     -- player State
     self.touchingGround = false
     self.touchingCeiling = false
     self.touchingWall = false 
     self.dead = false
-    self.doubleJumpAvailable = true 
-    self.climbAvailable = false
+    self.jumpStompAvailable = true 
     
    
 
@@ -77,21 +82,23 @@ end
 
 function Player:handleState()
     if self.currentState == "idle" then
-        self:applyGravity(true) 
+        self:applyGravity()
         self:handleGroundInput()
     elseif self.currentState == "run" then
-        self:applyGravity(true) 
+        self:applyGravity()
         self:handleGroundInput()
     elseif self.currentState == "jump" then
         if self.touchingGround then
             self:changeToIdleState()
         end
-        self:applyGravity(true)
+        self:applyGravity()
         self:applyDrag(self.drag)
         self:handleAirInput()
-    elseif self.currentState == "climb" then
-        self:applyGravity(false)
-        self:handleGroundInput()
+    elseif self.currentState == "dash" then
+        self:applyDrag(self.dashDrag)
+    if math.abs(self.xVelocity) <= self.dashMinimumSpeed then
+        self:changeToFallState()
+    end
     end
 end
 
@@ -163,8 +170,8 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
-    elseif pd.buttonIsPressed(pd.kButtonB) and self.climbAvailable and pd.buttonIsPressed(pd.kButtonUp)then
-        self:changeToClimbState()
+    elseif pd.buttonIsPressed(pd.kButtonB) and self.dashAvailable then
+        self:changeToDashState()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
@@ -175,13 +182,12 @@ function Player:handleGroundInput()
 end
 
 function Player:handleAirInput()
-    if self:playerJumped() and self.doubleJumpAvailable then
-        self.doubleJumpAvailable = false
-        self:changeToJumpState()
+    if self:playerJumped() then
+        return
     elseif self:playerJumped() and self.climbAvailable then
         self:changeToClimbState()
     elseif pd.buttonJustPressed(pd.kButtonB)  then
-        print("b button is pressed")
+        return
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self.xVelocity = -self.maxSpeed
     elseif pd.buttonIsPressed(pd.kButtonRight) then
@@ -212,10 +218,25 @@ function Player:changeToRunState(direction)
     self:changeState("run")
 end
 
-function Player:changeToClimbState()
- 
-
-    self:changeState("climb")
+function Player:changeToDashState()
+    self.dashAvailable = false
+    self.yVelocity = 0
+    if pd.buttonIsPressed(pd.kButtonLeft) then
+        self.xVelocity = -self.dashSpeed
+    elseif pd.buttonIsPressed(pd.kButtonRight) then
+        self.xVelocity = self.dashSpeed
+    elseif pd.buttonIsPressed(pd.kButtonUp) then
+        self.yVelocity = -self.dashSpeed
+    elseif pd.buttonIsPressed(pd.kButtonDown) then
+        self.yVelocity = self.dashSpeed
+    else
+        if self.globalFlip == 1 then
+            self.xVelocity = -self.dashSpeed
+        else 
+            self.xVelocity = self.dashSpeed
+        end
+    end
+    self:changeState("dash")
 end
 
 function Player:changeToFallState()
@@ -224,7 +245,7 @@ end
 
 
 -- physics helper functions 
-function Player:applyGravity(enableGravity) 
+function Player:applyGravity() 
     self.yVelocity += self.gravity
         if self.touchingGround or self.touchingCeiling then
             self.yVelocity = 0

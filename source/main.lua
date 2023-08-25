@@ -9,11 +9,8 @@ import "scripts/libraries/AnimatedSprite"
 --game files 
 import "scripts/GameScene"
 import "scripts/player"
-import "scripts/screenShake"
-
 
 GameScene()
-
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics 

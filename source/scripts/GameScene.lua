@@ -2,6 +2,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local ldtk <const> = LDtk
 
+
 ldtk.load("levels/world.ldtk", nil)
 
 class("GameScene").extends()
