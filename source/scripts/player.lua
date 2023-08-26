@@ -13,7 +13,8 @@ function Player:init(x, y, gameManager)
     self:addState("idle", 1, 1)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
-    self:addState("dash", 3,3)
+    self:addState("jumpStomp", 3,3)
+    self:addState("runAttackSpeed", 1,2)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -32,8 +33,8 @@ function Player:init(x, y, gameManager)
     self.jumpBuffer = 0
 
     --dash
-    self.dashSpeed = 10
-    self.dashAvailable = true
+    self.jumpStompSpeed = 10
+    self.jumpStompAvailable = true
     self.dashMinimumSpeed = 3
     self.dashDrag = 0.8    
 
@@ -43,7 +44,6 @@ function Player:init(x, y, gameManager)
     self.touchingCeiling = false
     self.touchingWall = false 
     self.dead = false
-    self.jumpStompAvailable = true 
     
    
 
@@ -94,7 +94,7 @@ function Player:handleState()
         self:applyGravity()
         self:applyDrag(self.drag)
         self:handleAirInput()
-    elseif self.currentState == "dash" then
+    elseif self.currentState == "jumpStomp" then
         self:applyDrag(self.dashDrag)
     if math.abs(self.xVelocity) <= self.dashMinimumSpeed then
         self:changeToFallState()
@@ -119,7 +119,7 @@ function Player:handleMovementAndCollisions()
         
         if collisionType == gfx.sprite.kCollisionTypeSlide then
             if collision.normal.y == -1 then
-                self.dashAvailable = true
+                self.jumpStompAvailable = true
                 self.touchingGround = true
                 elseif collision.normal.y == 1 then
                     self.touchingCeiling = true
@@ -169,8 +169,8 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
-    elseif pd.buttonIsPressed(pd.kButtonB) and self.dashAvailable then
-        self:changeToDashState()
+    elseif pd.buttonIsPressed(pd.kButtonB)   then
+        return 
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
@@ -183,8 +183,8 @@ end
 function Player:handleAirInput()
     if self:playerJumped() then
         return
-    elseif pd.buttonJustPressed(pd.kButtonB)  then
-        return
+    elseif pd.buttonJustPressed(pd.kButtonB) and self.jumpStompAvailable then
+        self:changeToJumpStompState()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self.xVelocity = -self.maxSpeed
     elseif pd.buttonIsPressed(pd.kButtonRight) then
@@ -192,13 +192,14 @@ function Player:handleAirInput()
     end
 end
 
+-- state functions 
+
 function Player:changeToJumpState()
     self.yVelocity = self.jumpVelocity
     self.jumpBuffer = 0
     self:changeState("jump")
 end
 
--- state Transitions 
 function Player:changeToIdleState()
     self.xVelocity = 0
     self:changeState("idle")
@@ -215,25 +216,23 @@ function Player:changeToRunState(direction)
     self:changeState("run")
 end
 
-function Player:changeToDashState()
-    self.dashAvailable = false
+function Player:changeToJumpStompState()
+    self.jumpStompAvailable = false
     self.yVelocity = 0
-    if pd.buttonIsPressed(pd.kButtonLeft) then
-        self.xVelocity = -self.dashSpeed
-    elseif pd.buttonIsPressed(pd.kButtonRight) then
-        self.xVelocity = self.dashSpeed
-    elseif pd.buttonIsPressed(pd.kButtonUp) then
-        self.yVelocity = -self.dashSpeed
-    elseif pd.buttonIsPressed(pd.kButtonDown) then
-        self.yVelocity = self.dashSpeed
+    if  pd.buttonIsPressed(pd.kButtonDown) then
+        self.yVelocity = self.jumpStompSpeed
     else
-        if self.globalFlip == 1 then
-            self.xVelocity = -self.dashSpeed
-        else 
-            self.xVelocity = self.dashSpeed
-        end
     end
-    self:changeState("dash")
+    self:changeState("jumpStomp")
+end
+
+function Player:changeToRunAttackState()
+    -- psuedo code 
+    -- while running if b is pressed then
+    -- runAttackSpeed += 1 until runAtkSpeed == maxRunAtkSpeed 
+    -- xVelocity = runAttackSpeed
+    -- 
+    -- end 
 end
 
 function Player:changeToFallState()
@@ -241,7 +240,7 @@ function Player:changeToFallState()
 end
 
 
--- physics helper functions 
+-- physics functions 
 function Player:applyGravity() 
     self.yVelocity += self.gravity
         if self.touchingGround or self.touchingCeiling then
