@@ -14,7 +14,7 @@ function Player:init(x, y, gameManager)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
     self:addState("jumpStomp", 3,3)
-    self:addState("runAttackSpeed", 1,2)
+    self:addState("runAttack", 1,2)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -32,12 +32,16 @@ function Player:init(x, y, gameManager)
     self.jumpBufferAmount = 5
     self.jumpBuffer = 0
 
-    --dash
+    --jumpStomp
     self.jumpStompSpeed = 10
     self.jumpStompAvailable = true
     self.dashMinimumSpeed = 3
     self.dashDrag = 0.8    
 
+    --run attack 
+    self.runAttackAvailable = true
+    self.runAttackSpeed = 0
+    self.maxRunAttackSpeed = 10
 
     -- player State
     self.touchingGround = false
@@ -85,6 +89,9 @@ function Player:handleState()
         self:applyGravity()
         self:handleGroundInput()
     elseif self.currentState == "run" then
+        self:applyGravity()
+        self:handleGroundInput()
+    elseif self.currentState == "runAttack" then
         self:applyGravity()
         self:handleGroundInput()
     elseif self.currentState == "jump" then
@@ -169,12 +176,16 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
-    elseif pd.buttonIsPressed(pd.kButtonB)   then
-        return 
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
-        self:changeToRunState("right") 
+        self:changeToRunState("right")
+    elseif pd.buttonIsPressed(pd.kButtonRight) and pd.buttonIsPressed(pd.kButtonB) and self.runAttackAvailable then
+        print("runAtk to the right")
+        self:changeToRunAttackState("right")
+    elseif pd.buttonIsPressed(pd.kButtonLeft) and pd.buttonIsPressed(pd.kButtonB) and self.runAttackAvailable then
+        print("runAtk to the left")
+        self:changeToRunAttackState("left")
     else
         self:changeToIdleState()
     end
@@ -221,18 +232,19 @@ function Player:changeToJumpStompState()
     self.yVelocity = 0
     if  pd.buttonIsPressed(pd.kButtonDown) then
         self.yVelocity = self.jumpStompSpeed
-    else
     end
+    print("its stomping time")
     self:changeState("jumpStomp")
 end
 
-function Player:changeToRunAttackState()
-    -- psuedo code 
-    -- while running if b is pressed then
-    -- runAttackSpeed += 1 until runAtkSpeed == maxRunAtkSpeed 
-    -- xVelocity = runAttackSpeed
-    -- 
-    -- end 
+function Player:changeToRunAttackState(direction)
+    if direction == "left" then
+        print("run attack to the left")
+    elseif direction == "right" then
+        print("run attack to the right")
+    end
+    print("runattackstate")
+    self:changeState("runAttack")
 end
 
 function Player:changeToFallState()
