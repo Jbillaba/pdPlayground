@@ -2,6 +2,17 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local ldtk <const> = LDtk
 
+TAGS = {
+Player = 1,
+Hazard = 2,
+Obstacle= 3
+}
+
+Z_INDEXES = {
+Player = 100,
+Hazard = 20,
+Obstacle = 50
+}
 
 ldtk.load("levels/world.ldtk", nil)
 

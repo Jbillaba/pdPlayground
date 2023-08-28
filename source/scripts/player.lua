@@ -19,6 +19,8 @@ function Player:init(x, y, gameManager)
 
     -- sprite properties
     self:moveTo(x, y)
+    self:setZIndex(Z_INDEXES.Player)
+    self:setTag(TAGS.Player)
     self:setCollideRect(3,3,10,13)
 
     --physics 
@@ -55,6 +57,10 @@ end
 
 
 function Player:collisionResponse(other)
+    local tag = other:getTag()
+    if tag == TAGS.Hazard or tag == TAGS.Obstacle then
+        return gfx.sprite.kCollisionTypeBounce
+    end
     return gfx.sprite.kCollisionTypeSlide
 end
 
