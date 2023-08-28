@@ -235,11 +235,10 @@ end
 
 function Player:changeTowindUpTackleState()
     self.windUpTackleSpeed += 1 
-    if self.windUpTackleSpeed <= self.maxWindUpTackleSpeed then
-        return
-    end
-    print(self.windUpTackleSpeed)
     self.xVelocity = self.windUpTackleSpeed
+    if self.windUpTackleSpeed >= self.maxWindUpTackleSpeed then
+        self.xVelocity = self.maxWindUpTackleSpeed
+    end
     self:changeState("windUpTackle")
 end
 
