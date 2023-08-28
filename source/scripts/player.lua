@@ -182,6 +182,8 @@ function Player:handleGroundInput()
         self:changeToRunState("right")
     elseif  pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
         self:changeTowindUpTackleState()
+    elseif pd.buttonJustReleased(pd.kButtonB) then
+        self.windUpTackleSpeed = 0
     else
         self:changeToIdleState()
     end
