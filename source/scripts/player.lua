@@ -14,7 +14,7 @@ function Player:init(x, y, gameManager)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
     self:addState("jumpStomp", 3,3)
-    self:addState("runAttack", 1,2)
+    self:addState("windUpTackle", 1,2)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -39,9 +39,9 @@ function Player:init(x, y, gameManager)
     self.dashDrag = 0.8    
 
     --run attack 
-    self.runAttackAvailable = true
-    self.runAttackSpeed = 0
-    self.maxRunAttackSpeed = 10
+    self.windUpTackleAvailable = true
+    self.windUpTackleSpeed = 0
+    self.maxwindUpTackleSpeed = 10
 
     -- player State
     self.touchingGround = false
@@ -91,7 +91,7 @@ function Player:handleState()
     elseif self.currentState == "run" then
         self:applyGravity()
         self:handleGroundInput()
-    elseif self.currentState == "runAttack" then
+    elseif self.currentState == "windUpTackle" then
         self:applyGravity()
         self:handleGroundInput()
     elseif self.currentState == "jump" then
@@ -180,12 +180,12 @@ function Player:handleGroundInput()
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
         self:changeToRunState("right")
-    elseif pd.buttonIsPressed(pd.kButtonRight) and pd.buttonIsPressed(pd.kButtonB) and self.runAttackAvailable then
+    elseif pd.buttonIsPressed(pd.kButtonRight) and pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
         print("runAtk to the right")
-        self:changeToRunAttackState("right")
-    elseif pd.buttonIsPressed(pd.kButtonLeft) and pd.buttonIsPressed(pd.kButtonB) and self.runAttackAvailable then
+        self:changeTowindUpTackleState("right")
+    elseif pd.buttonIsPressed(pd.kButtonLeft) and pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
         print("runAtk to the left")
-        self:changeToRunAttackState("left")
+        self:changeTowindUpTackleState("left")
     else
         self:changeToIdleState()
     end
@@ -237,14 +237,14 @@ function Player:changeToJumpStompState()
     self:changeState("jumpStomp")
 end
 
-function Player:changeToRunAttackState(direction)
+function Player:changeTowindUpTackleState(direction)
     if direction == "left" then
         print("run attack to the left")
     elseif direction == "right" then
         print("run attack to the right")
     end
-    print("runattackstate")
-    self:changeState("runAttack")
+    print("windUpTacklestate")
+    self:changeState("windUpTackle")
 end
 
 function Player:changeToFallState()
