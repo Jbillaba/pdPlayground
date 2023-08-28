@@ -41,7 +41,7 @@ function Player:init(x, y, gameManager)
     --run attack 
     self.windUpTackleAvailable = true
     self.windUpTackleSpeed = 0
-    self.maxwindUpTackleSpeed = 10
+    self.maxWindUpTackleSpeed = 10
 
     -- player State
     self.touchingGround = false
@@ -180,12 +180,8 @@ function Player:handleGroundInput()
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
         self:changeToRunState("right")
-    elseif pd.buttonIsPressed(pd.kButtonRight) and pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
-        print("runAtk to the right")
-        self:changeTowindUpTackleState("right")
-    elseif pd.buttonIsPressed(pd.kButtonLeft) and pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
-        print("runAtk to the left")
-        self:changeTowindUpTackleState("left")
+    elseif  pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
+        self:changeTowindUpTackleState()
     else
         self:changeToIdleState()
     end
@@ -237,13 +233,13 @@ function Player:changeToJumpStompState()
     self:changeState("jumpStomp")
 end
 
-function Player:changeTowindUpTackleState(direction)
-    if direction == "left" then
-        print("run attack to the left")
-    elseif direction == "right" then
-        print("run attack to the right")
+function Player:changeTowindUpTackleState()
+    self.windUpTackleSpeed += 1 
+    if self.windUpTackleSpeed <= self.maxWindUpTackleSpeed then
+        return
     end
-    print("windUpTacklestate")
+    print(self.windUpTackleSpeed)
+    self.xVelocity = self.windUpTackleSpeed
     self:changeState("windUpTackle")
 end
 
