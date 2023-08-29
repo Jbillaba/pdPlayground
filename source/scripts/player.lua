@@ -237,7 +237,6 @@ function Player:changeToJumpStompState()
     if  pd.buttonIsPressed(pd.kButtonDown) then
         self.yVelocity = self.jumpStompSpeed
     end
-    print("its stomping time")
     self:changeState("jumpStomp")
 end
 
