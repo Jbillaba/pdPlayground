@@ -198,7 +198,7 @@ end
 function Player:handleAirInput()
     if self:playerJumped() then
         return
-    elseif pd.buttonJustPressed(pd.kButtonB) and self.jumpStompAvailable then
+    elseif pd.buttonJustPressed(pd.kButtonDown) and self.jumpStompAvailable then
         self:changeToJumpStompState()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self.xVelocity = -self.maxSpeed
@@ -233,10 +233,7 @@ end
 
 function Player:changeToJumpStompState()
     self.jumpStompAvailable = false
-    self.yVelocity = 0
-    if  pd.buttonIsPressed(pd.kButtonDown) then
-        self.yVelocity = self.jumpStompSpeed
-    end
+    self.yVelocity = self.jumpStompSpeed
     self:changeState("jumpStomp")
 end
 
