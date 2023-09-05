@@ -9,7 +9,7 @@ import "scripts/libraries/LDtk"
 import "scripts/libraries/AnimatedSprite"
 
 --game files 
-import "scripts/menuSystem"
+import "scripts/titleMenu"
 import "scripts/GameScene"
 import "scripts/player"
 
@@ -17,10 +17,10 @@ import "scripts/player"
 local pd <const> = playdate
 local gfx <const> = pd.graphics 
 
-menuSystem:title_menu()
+GameScene()
 
 function pd.update()
-    menuSystem:update()
+    titleMenu:update()
     gfx.sprite.update()
     pd.timer.updateTimers()
 end

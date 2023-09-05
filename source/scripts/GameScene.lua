@@ -19,13 +19,16 @@ ldtk.load("levels/world.ldtk", nil)
 class("GameScene").extends()
 
 function GameScene:init()
+    titleMenu()
+end
+
+function GameScene:startGame()
     self:goToLevel("Level_0")
     self.spawnX = 2 * 16 
     self.spawnY = 11 * 16
 
     self.player = Player(self.spawnX, self.spawnY, self)
 end
-
 
 function GameScene:resetPlayer()
     self.player:moveTo(self.spawnX, self.spawnY)

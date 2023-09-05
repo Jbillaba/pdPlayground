@@ -1,0 +1,58 @@
+local pd <const> = playdate
+local gfx <const> = pd.graphics
+
+class('titleMenu').extends()
+
+local gridview = pd.ui.gridview.new(0,32)
+
+local titleMenuOptions = {"start", "about", "quit"}
+
+
+gridview:setNumberOfRows(#titleMenuOptions)
+gridview:setCellPadding(4,4,4,4)
+
+gridview.backgroundImage = gfx.nineSlice.new("images/menuBG", 7,7,18,18)
+gridview:setContentInset(5,5,5,5)
+
+local gridviewSprite = gfx.sprite.new()
+gridviewSprite:setCenter(0,0)
+gridviewSprite:moveTo(100,130)
+gridviewSprite:add()
+
+function gridview:drawCell(section, row, column, selected, x, y, width, height)
+if selected then
+        gfx.fillRoundRect(x, y, width, height, 4)
+        gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+else
+        gfx.setImageDrawMode(gfx.kDrawModeCopy)
+end
+local fontHeight = gfx.getSystemFont():getHeight()
+gfx.drawTextInRect(titleMenuOptions[row], x, y + (height/2 - fontHeight/2) + 2, width, height, nil, nil, kTextAlignment.center)
+end
+
+
+function gridview:titleMenuInput(selection)
+    if pd.buttonJustPressed(pd.kButtonUp) then
+        gridview:selectPreviousRow(true)
+    elseif pd.buttonJustPressed(pd.kButtonDown) then
+        gridview:selectNextRow(true)
+    elseif pd.buttonJustPressed(pd.kButtonA) then
+        selection = gridview:getSelectedRow() 
+        print(titleMenuOptions[selection])
+    end
+end
+
+
+function titleMenu:update()
+
+    gridview:titleMenuInput()
+
+    if gridview.needsDisplay then
+        local gridviewImage = gfx.image.new(200, 100)
+        gfx.pushContext(gridviewImage)
+            gridview:drawInRect(0, 0, 200, 100)
+        gfx.popContext()
+        gridviewSprite:setImage(gridviewImage)
+    end
+
+end
