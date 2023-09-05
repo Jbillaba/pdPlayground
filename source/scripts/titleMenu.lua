@@ -1,5 +1,6 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
+local isRunning = true
 
 class('titleMenu').extends()
 
@@ -34,20 +35,32 @@ end
 
 
 function gridview:titleMenuInput()
-    if pd.buttonJustPressed(pd.kButtonUp) then
-        gridview:selectPreviousRow(true)
-    elseif pd.buttonJustPressed(pd.kButtonDown) then
-        gridview:selectNextRow(true)
-    elseif pd.buttonJustPressed(pd.kButtonA) then
-        menuSelection = gridview:getSelectedRow() 
-        print(titleMenuOptions[menuSelection])
+    if isRunning then
+        if pd.buttonJustPressed(pd.kButtonUp) then
+            gridview:selectPreviousRow(true)
+        elseif pd.buttonJustPressed(pd.kButtonDown) then
+            gridview:selectNextRow(true)
+        elseif pd.buttonJustPressed(pd.kButtonA) then
+            menuSelection = gridview:getSelectedRow() 
+            print(titleMenuOptions[menuSelection])
+        end
+    
+        if menuSelection == 1 then
+            GameScene:startGame()
+            isRunning = false
+        end
+    
     end
+   
 end
 
+function titleMenu:stopRunning()
+    print('why are you running')
+    return
+end
 
 function titleMenu:update()
-
-    gridview:titleMenuInput()
+        gridview:titleMenuInput()
 
     if gridview.needsDisplay then
         local gridviewImage = gfx.image.new(200, 100)
