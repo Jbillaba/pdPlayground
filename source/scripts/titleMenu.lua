@@ -35,14 +35,13 @@ end
 
 
 function gridview:titleMenuInput()
-    if isRunning then
+
         if pd.buttonJustPressed(pd.kButtonUp) then
             gridview:selectPreviousRow(true)
         elseif pd.buttonJustPressed(pd.kButtonDown) then
             gridview:selectNextRow(true)
         elseif pd.buttonJustPressed(pd.kButtonA) then
             menuSelection = gridview:getSelectedRow() 
-            print(titleMenuOptions[menuSelection])
         end
     
         if menuSelection == 1 then
@@ -50,17 +49,15 @@ function gridview:titleMenuInput()
             isRunning = false
         end
     
-    end
    
 end
 
-function titleMenu:stopRunning()
-    print('why are you running')
-    return
-end
 
 function titleMenu:update()
+    if isRunning then
         gridview:titleMenuInput()
+        
+    end
 
     if gridview.needsDisplay then
         local gridviewImage = gfx.image.new(200, 100)

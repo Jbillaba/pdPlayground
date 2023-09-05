@@ -36,10 +36,8 @@ end
 
 function GameScene:enterRoom(direction)
     local level = ldtk.get_neighbours(self.levelName, direction)[1]
-    print(level)
     self:goToLevel(level)
     self.player:add()
-    print(level_name)
     local spawnX, spawnY
     if direction == "north" then
         spawnX, spawnY = self.player.x, 240
