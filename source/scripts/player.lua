@@ -28,6 +28,7 @@ function Player:init(x, y, gameManager)
     self.yVelocity = 0
     self.gravity = 1.0
     self.maxSpeed = 3.0
+    self.maxRunSpeed = 6.0
     self.jumpVelocity = -8
     self.drag = 0.1
     self.minimumAirSpeed = 0.5

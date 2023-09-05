@@ -26,14 +26,17 @@ function GameScene:init()
     self.player = Player(self.spawnX, self.spawnY, self)
 end
 
+
 function GameScene:resetPlayer()
     self.player:moveTo(self.spawnX, self.spawnY)
 end
 
 function GameScene:enterRoom(direction)
     local level = ldtk.get_neighbours(self.levelName, direction)[1]
+    print(level)
     self:goToLevel(level)
     self.player:add()
+    print(level_name)
     local spawnX, spawnY
     if direction == "north" then
         spawnX, spawnY = self.player.x, 240
@@ -68,6 +71,16 @@ function GameScene:goToLevel(level_name)
             if emptyTiles then
                 gfx.sprite.addWallSprites(tileMap, emptyTiles)
             end
+
+            for _, entity in ipairs(ldtk.get_entities(level_name)) do
+                local entityX, entityY = entity.position.x, entity.position.y
+                local entityName = entity.name
+                if entityName == "Title" then
+                    Title(entityX,entityY)
+                end
+            end
+
+
         end
     end
 end
