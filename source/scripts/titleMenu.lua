@@ -3,6 +3,8 @@ local gfx <const> = pd.graphics
 
 class('titleMenu').extends()
 
+gfx.drawText("the Game", 160, 80)
+
 local gridview = pd.ui.gridview.new(0,32)
 
 local titleMenuOptions = {"start", "about", "quit"}
@@ -31,14 +33,14 @@ gfx.drawTextInRect(titleMenuOptions[row], x, y + (height/2 - fontHeight/2) + 2, 
 end
 
 
-function gridview:titleMenuInput(selection)
+function gridview:titleMenuInput()
     if pd.buttonJustPressed(pd.kButtonUp) then
         gridview:selectPreviousRow(true)
     elseif pd.buttonJustPressed(pd.kButtonDown) then
         gridview:selectNextRow(true)
     elseif pd.buttonJustPressed(pd.kButtonA) then
-        selection = gridview:getSelectedRow() 
-        print(titleMenuOptions[selection])
+        menuSelection = gridview:getSelectedRow() 
+        print(titleMenuOptions[menuSelection])
     end
 end
 
