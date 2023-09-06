@@ -12,6 +12,7 @@ import "scripts/libraries/AnimatedSprite"
 import "scripts/titleMenu"
 import "scripts/GameScene"
 import "scripts/player"
+import "scripts/items"
 
 
 local pd <const> = playdate
@@ -20,7 +21,9 @@ local gfx <const> = pd.graphics
 GameScene()
 
 function pd.update()
-    titleMenu:update()
+    if titleMenu.isRunning then
+        titleMenu:update()        
+    end
     gfx.sprite.update()
     pd.timer.updateTimers()
 end

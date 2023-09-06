@@ -1,6 +1,6 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local isRunning = true
+local isRunning = false -- turn this on in production 
 
 class('titleMenu').extends()
 
@@ -52,19 +52,18 @@ function gridview:titleMenuInput()
    
 end
 
-
-function titleMenu:update()
-    if isRunning then
+if isRunning then
+    function titleMenu:update()
         gridview:titleMenuInput()
-        
-    end
+      
 
-    if gridview.needsDisplay then
-        local gridviewImage = gfx.image.new(200, 100)
-        gfx.pushContext(gridviewImage)
+        if gridview.needsDisplay then
+            local gridviewImage = gfx.image.new(200, 100)
+            gfx.pushContext(gridviewImage)
             gridview:drawInRect(0, 0, 200, 100)
-        gfx.popContext()
-        gridviewSprite:setImage(gridviewImage)
-    end
+                gfx.popContext()
+            gridviewSprite:setImage(gridviewImage)
+        end
 
+    end
 end

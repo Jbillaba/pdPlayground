@@ -14,7 +14,6 @@ function Player:init(x, y, gameManager)
     self:addState("run", 1, 2, {tickStep = 4}) --tickStep : determines speed of the animation the larger the value -> slower the animation
     self:addState("jump", 3,3)
     self:addState("jumpStomp", 3,3)
-    self:addState("windUpTackle", 1,2)
     self:playAnimation() -- we call this line to make sure the animation is really getting played
 
     -- sprite properties
@@ -41,11 +40,6 @@ function Player:init(x, y, gameManager)
     self.dashMinimumSpeed = 3
     self.dashDrag = 0.8    
 
-    --run attack 
-    self.windUpTackleAvailable = true
-    self.windUpTackleSpeed = 0
-    self.maxWindUpTackleSpeed = 10
-
     -- player State
     self.touchingGround = false
     self.touchingCeiling = false
@@ -59,8 +53,10 @@ end
 
 function Player:collisionResponse(other)
     local tag = other:getTag()
-    if tag == TAGS.Hazard or tag == TAGS.Obstacle then
+    if tag == TAGS.Hazard then
         return gfx.sprite.kCollisionTypeBounce
+    elseif tag == TAGS.Pickup then
+        return gfx.sprite.kCollisionTypeOverlap
     end
     return gfx.sprite.kCollisionTypeSlide
 end
@@ -98,9 +94,6 @@ function Player:handleState()
     elseif self.currentState == "run" then
         self:applyGravity()
         self:handleGroundInput()
-    elseif self.currentState == "windUpTackle" then
-        self:applyGravity()
-        self:handleGroundInput()
     elseif self.currentState == "jump" then
         if self.touchingGround then
             self:changeToIdleState()
@@ -109,7 +102,7 @@ function Player:handleState()
         self:applyDrag(self.drag)
         self:handleAirInput()
     elseif self.currentState == "jumpStomp" then
-        self:applyDrag(self.dashDrag)
+    self:applyDrag(self.dashDrag)
     if math.abs(self.xVelocity) <= self.dashMinimumSpeed then
         self:changeToFallState()
     end
@@ -142,8 +135,15 @@ function Player:handleMovementAndCollisions()
             if collision.normal.x ~= 0 then
                 self.touchingWall = true
             end
+
+            if collisionTag == TAGS.Hazard then
+                dead = true 
+            elseif collisionTag == TAGS.Pickup then
+                collisionObject:pickUp(self)
+            end
         end
      
+       
 
     if self.xVelocity < 0 then 
         self.globalFlip = 1 
@@ -187,10 +187,11 @@ function Player:handleGroundInput()
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then
         self:changeToRunState("right")
-    elseif  pd.buttonIsPressed(pd.kButtonB) and self.windUpTackleAvailable then
-        self:changeTowindUpTackleState()
-    elseif pd.buttonJustReleased(pd.kButtonB) then
-        self.windUpTackleSpeed = 0
+    elseif pd.buttonIsPressed(pd.kButtonLeft) and pd.BButtonHeld() then
+        self:changeToSprintState("left")
+    elseif pd.buttonIsPressed(pd.kButtonRight)  then
+        self:changeToSprintState("right")
+        
     else
         self:changeToIdleState()
     end
@@ -232,25 +233,28 @@ function Player:changeToRunState(direction)
     self:changeState("run")
 end
 
+function Player:changeToSprintState(direction)
+    if direction == "left" then
+        self.xVelocity = -self.maxRunSpeed
+        self.globalFlip = 1
+    elseif direction == "right" then
+        self.xVelocity = self.maxRunSpeed
+        self.globalFlip = 0
+    end
+    self:changeState("run")
+    
+end
+
 function Player:changeToJumpStompState()
     self.jumpStompAvailable = false
     self.yVelocity = self.jumpStompSpeed
     self:changeState("jumpStomp")
 end
 
-function Player:changeTowindUpTackleState()
-    self.windUpTackleSpeed += 1 
-    self.xVelocity = self.windUpTackleSpeed
-    if self.windUpTackleSpeed >= self.maxWindUpTackleSpeed then
-        self.xVelocity = self.maxWindUpTackleSpeed
-    end
-    self:changeState("windUpTackle")
-end
 
 function Player:changeToFallState()
     self:changeState("jump")
 end
-
 
 -- physics functions 
 function Player:applyGravity() 
