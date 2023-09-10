@@ -35,9 +35,7 @@ function GameScene:startGame()
     self.spawnY = 11 * 16
 
     self.player = Player(self.spawnX, self.spawnY, self)
-    Countdown:createCountdownDisplay()
     Countdown:startTimer()
-    print(Countdown.countdown.timeLeft)
 end
 
 function GameScene:resetPlayer()
@@ -65,6 +63,7 @@ end
 
 function GameScene:goToLevel(level_name)
     gfx.sprite.removeAll()
+    Countdown:createCountdownDisplay()
 
     self.levelName = level_name
     for layer_name, layer in pairs(ldtk.get_layers(level_name)) do 
