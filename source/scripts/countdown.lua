@@ -20,6 +20,10 @@ function Countdown:startTimer()
     countdownTimer:start()
 end
 
+function Countdown:resetTimer()
+    countdownTimer:reset()
+end
+
 function Countdown:updateCountdownDisplay()
     timeText = "Time Left: "..countdownTimer.timeLeft
     local textWidth, textHeight = gfx.getTextSize(timeText)

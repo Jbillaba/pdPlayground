@@ -71,7 +71,6 @@ function Player:update() -- this function gets called on automatically if its on
     self:updateJumpBuffer()
     self:handleState()
     self:handleMovementAndCollisions()
-    self:timerDeath()
 end
 
 function Player:updateJumpBuffer()
@@ -162,6 +161,10 @@ function Player:handleMovementAndCollisions()
         self:die()
     end
 
+    if countdownTimer.timeLeft == 0 then
+        self:die()
+    end
+
     if died then
         self:die()
     end
@@ -177,6 +180,7 @@ function Player:die()
         self:setCollisionsEnabled(true)
         self.dead = false
         self.gameManager:resetPlayer(0)
+        countdownTimer:reset()
     end)
 end
 
@@ -277,8 +281,3 @@ function Player:applyDrag(amount)
     end
 end
 
-function Player:timerDeath()
-    if countdownTimer.timeLeft == 0 then
-        self:die()
-    end
-end
