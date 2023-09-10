@@ -1,10 +1,10 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local isRunning = false -- turn this on in production 
+local isRunning = true -- turn this on in production 
 
 class('titleMenu').extends()
 
-gfx.drawText("the Game", 160, 80)
+-- gfx.drawText("the Game", 160, 80)
 
 local gridview = pd.ui.gridview.new(0,32)
 
@@ -52,9 +52,10 @@ function gridview:titleMenuInput()
    
 end
 
-if isRunning then
     function titleMenu:update()
-        gridview:titleMenuInput()
+        if isRunning then
+            gridview:titleMenuInput()
+        end
       
 
         if gridview.needsDisplay then
@@ -66,4 +67,3 @@ if isRunning then
         end
 
     end
-end

@@ -13,6 +13,7 @@ import "scripts/titleMenu"
 import "scripts/GameScene"
 import "scripts/player"
 import "scripts/items"
+import "scripts/countdown"
 
 
 local pd <const> = playdate
@@ -21,9 +22,8 @@ local gfx <const> = pd.graphics
 GameScene()
 
 function pd.update()
-    if titleMenu.isRunning then
-        titleMenu:update()        
-    end
+    titleMenu:update()        
+    Countdown:updateCountdownDisplay()
     gfx.sprite.update()
     pd.timer.updateTimers()
 end

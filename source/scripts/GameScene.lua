@@ -19,16 +19,25 @@ ldtk.load("levels/world.ldtk", nil)
 class("GameScene").extends()
 
 function GameScene:init()
-    -- titleMenu() once the testing is over turn this back on and shit
-    self:startGame()
+    titleMenu() 
+    -- self:startGame()
+end
+
+function GameScene:goToStageSelect()
+    --TODO
+    -- there would be a function placed here for the stage select screen 
 end
 
 function GameScene:startGame()
+    gfx.sprite.removeAll() -- remove menu sprites 
     self:goToLevel("Level_0")
     self.spawnX = 2 * 16 
     self.spawnY = 11 * 16
 
     self.player = Player(self.spawnX, self.spawnY, self)
+    Countdown:createCountdownDisplay()
+    Countdown:startTimer()
+    print(Countdown.countdown.timeLeft)
 end
 
 function GameScene:resetPlayer()
