@@ -71,6 +71,7 @@ function Player:update() -- this function gets called on automatically if its on
     self:updateJumpBuffer()
     self:handleState()
     self:handleMovementAndCollisions()
+    self:timerDeath()
 end
 
 function Player:updateJumpBuffer()
@@ -273,5 +274,11 @@ function Player:applyDrag(amount)
 
     if math.abs(self.xVelocity) < self.minimumAirSpeed or self.touchingWall then
         self.xVelocity = 0
+    end
+end
+
+function Player:timerDeath()
+    if countdownTimer.timeLeft == 0 then
+        self:die()
     end
 end

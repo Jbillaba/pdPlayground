@@ -2,15 +2,14 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 
-local countdown = pd.timer.new(6000)
-countdown:pause()
+countdownTimer = pd.timer.new(6000)
+countdownTimer:pause()
 
 local timeSprite = gfx.sprite.new()
 
 class("Countdown").extends()
 
 function Countdown:createCountdownDisplay()
-    print(countdown.timeLeft)
     self:updateCountdownDisplay()
     timeSprite:setCenter(0,0)
     timeSprite:moveTo(180,20)
@@ -18,11 +17,11 @@ function Countdown:createCountdownDisplay()
 end
 
 function Countdown:startTimer()
-    countdown:start()
+    countdownTimer:start()
 end
 
 function Countdown:updateCountdownDisplay()
-    timeText = "Time Left: "..countdown.timeLeft
+    timeText = "Time Left: "..countdownTimer.timeLeft
     local textWidth, textHeight = gfx.getTextSize(timeText)
     timeImage = gfx.image.new(textWidth,textHeight)
     gfx.pushContext(timeImage)
