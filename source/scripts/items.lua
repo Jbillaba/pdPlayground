@@ -24,9 +24,7 @@ function item:init(x,y,entity)
 end
 
 function item:pickUp(player)
-    if self.itemName == "Coin" then
-        print("you got a Coin")
-    elseif self.itemName == "Usb" then
+    if  self.itemName == "Usb" then
         print("you got a usb")
     end
     self.fields.pickedUp = true

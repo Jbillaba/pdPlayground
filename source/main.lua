@@ -23,7 +23,7 @@ GameScene()
 
 function pd.update()
     titleMenu:update()        
-    Countdown:updateCountdownDisplay()
+    -- Countdown:updateCountdownDisplay()
     gfx.sprite.update()
     pd.timer.updateTimers()
 end
