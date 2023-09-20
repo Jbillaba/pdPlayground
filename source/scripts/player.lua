@@ -180,7 +180,8 @@ function Player:die()
         self:setCollisionsEnabled(true)
         self.dead = false
         self.gameManager:resetPlayer(0)
-        countdownTimer:reset()
+        Countdown:resetTimer()
+        Countdown:startTimer()
     end)
 end
 

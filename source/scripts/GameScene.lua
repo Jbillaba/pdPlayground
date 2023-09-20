@@ -1,6 +1,7 @@
 local pd <const> = playdate 
 local gfx <const> = pd.graphics
 local ldtk <const> = LDtk
+local inProd <const> = true
 
 TAGS = {
 Player = 1,
@@ -19,8 +20,11 @@ ldtk.load("levels/world.ldtk", nil)
 class("GameScene").extends()
 
 function GameScene:init()
-    titleMenu() 
-    -- self:startGame()
+    if inProd then
+    self:startGame()        
+    else
+        titleMenu() 
+    end
 end
 
 function GameScene:goToStageSelect()
@@ -35,11 +39,16 @@ function GameScene:startGame()
     self.spawnY = 11 * 16
 
     self.player = Player(self.spawnX, self.spawnY, self)
-    Countdown:startTimer()
+    pd.timer.performAfterDelay(200, function ()
+        Countdown:startTimer()
+    end)
 end
 
 function GameScene:resetPlayer()
     self.player:moveTo(self.spawnX, self.spawnY)
+    pd.timer.performAfterDelay(200, function ()
+        Countdown:startTimer()
+    end)
 end
 
 function GameScene:enterRoom(direction)
