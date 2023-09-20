@@ -1,6 +1,6 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local isRunning = true -- turn this on in production 
+local isRunning = false -- turn this on in production 
 
 class('titleMenu').extends()
 

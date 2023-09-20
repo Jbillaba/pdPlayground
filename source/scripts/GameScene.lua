@@ -46,6 +46,12 @@ function GameScene:resetPlayer()
     end)
 end
 
+function GameScene:goToNextLevel()
+    gfx.sprite.removeAll()
+    currLevelNumber += 1 
+    self:goToLevel("Level_"..currLevelNumber)
+end
+
 function GameScene:goToLevel(level_name)
     gfx.sprite.removeAll()
     -- Countdown:createCountdownDisplay()
