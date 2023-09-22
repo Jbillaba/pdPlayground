@@ -24,6 +24,7 @@ function GameScene:init()
     if inDebug then
     self:startGame()        
     else
+        titleMenu:titleLogo()
         titleMenu() 
     end
 end

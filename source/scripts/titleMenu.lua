@@ -12,18 +12,15 @@ function titleMenu:titleLogo()
     titleSprite:add()
 end
 
-
--- gfx.drawText("the Game", 160, 80)
-
 local gridview = pd.ui.gridview.new(0,32)
 
-local titleMenuOptions = {"start", "about", "quit"}
+local titleMenuOptions = {"start"}
 
 
 gridview:setNumberOfRows(#titleMenuOptions)
 gridview:setCellPadding(4,4,4,4)
 
-gridview.backgroundImage = gfx.nineSlice.new("images/menuBG", 7,7,18,18)
+gridview.backgroundImage = gfx.nineSlice.new("images/menuBG1", 7,7,18,18)
 gridview:setContentInset(5,5,5,5)
 
 local gridviewSprite = gfx.sprite.new()
@@ -57,18 +54,13 @@ function gridview:titleMenuInput()
             GameScene:startGame()
             isRunning = false
         end
-    
-   
 end
 
 function titleMenu:update()
 
-    self:titleLogo()
-
     if isRunning then
         gridview:titleMenuInput()
     end
-      
 
     if gridview.needsDisplay then
         local gridviewImage = gfx.image.new(200, 100)
@@ -77,6 +69,5 @@ function titleMenu:update()
             gfx.popContext()
         gridviewSprite:setImage(gridviewImage)
     end
-
 
 end
