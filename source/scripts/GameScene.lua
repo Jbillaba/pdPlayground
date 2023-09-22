@@ -1,7 +1,7 @@
 local pd <const> = playdate 
 local gfx <const> = pd.graphics
 local ldtk <const> = LDtk
-local inDebug <const> = true
+local inDebug <const> = false
 local currLevelNumber = 0 
 
 TAGS = {
@@ -32,19 +32,8 @@ end
 function GameScene:startGame()
     gfx.sprite.removeAll() -- remove menu sprites 
     self:goToLevel("Level_"..currLevelNumber)
-
-    -- self.player = Player(self.spawnX, self.spawnY, self)
-    -- pd.timer.performAfterDelay(200, function ()
-    --     Countdown:startTimer()
-    -- end)
 end
 
-function GameScene:resetPlayer()
-    self.player:moveTo(self.entityX, self.entityY)
-    pd.timer.performAfterDelay(200, function ()
-        Countdown:startTimer()
-    end)
-end
 
 function GameScene:goToNextLevel()
     gfx.sprite.removeAll()
@@ -86,3 +75,4 @@ function GameScene:goToLevel(level_name)
         end
     end
 end
+

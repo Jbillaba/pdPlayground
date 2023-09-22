@@ -151,16 +151,6 @@ function Player:handleMovementAndCollisions()
         self.globalFlip = 0
     end
 
-    -- if self.x < 0 then
-    --     self.gameManager:enterRoom("west")
-    -- elseif self.x > 400 then
-    --     self.gameManager:enterRoom("east")
-    -- elseif self.y < 0 then
-    --     self.yVelocity  = 0
-    -- elseif self.y > 240 then
-    --     self:die()
-    -- end
-
     if countdownTimer.timeLeft == 0 then
         self:die()
     end
@@ -189,6 +179,8 @@ end
 function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
+    elseif pd.buttonIsPressed(pd.kButtonB) then
+        GameScene:resetPlayer()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then

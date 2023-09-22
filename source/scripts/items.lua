@@ -19,7 +19,7 @@ function item:init(x,y,entity)
     self:add()
 
     self:setTag(TAGS.Pickup)
-    self:setCollideRect(0,0,self:getSize())
+    self:setCollideRect(5,6,5,6)
 
 end
 

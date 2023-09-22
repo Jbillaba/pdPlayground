@@ -1,8 +1,17 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local isRunning = false -- turn this on in production 
+local isRunning = true -- turn this on in production 
 
 class('titleMenu').extends()
+
+
+function titleMenu:titleLogo()
+    local titleLogo = gfx.image.new("images/title")
+    local titleSprite = gfx.sprite.new(titleLogo)
+    titleSprite:moveTo(200,80)
+    titleSprite:add()
+end
+
 
 -- gfx.drawText("the Game", 160, 80)
 
@@ -52,18 +61,22 @@ function gridview:titleMenuInput()
    
 end
 
-    function titleMenu:update()
-        if isRunning then
-            gridview:titleMenuInput()
-        end
+function titleMenu:update()
+
+    self:titleLogo()
+
+    if isRunning then
+        gridview:titleMenuInput()
+    end
       
 
-        if gridview.needsDisplay then
-            local gridviewImage = gfx.image.new(200, 100)
-            gfx.pushContext(gridviewImage)
-            gridview:drawInRect(0, 0, 200, 100)
-                gfx.popContext()
-            gridviewSprite:setImage(gridviewImage)
-        end
-
+    if gridview.needsDisplay then
+        local gridviewImage = gfx.image.new(200, 100)
+        gfx.pushContext(gridviewImage)
+        gridview:drawInRect(0, 0, 200, 100)
+            gfx.popContext()
+        gridviewSprite:setImage(gridviewImage)
     end
+
+
+end
