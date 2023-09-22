@@ -27,6 +27,8 @@ function item:pickUp(player)
     if  self.itemName == "Usb" then
         print("you got a usb")
         GameScene:goToNextLevel()
+    elseif self.itemName == "Candle" then
+        print("you got a candle !!")
     end
     self.fields.pickedUp = true
     self:remove()

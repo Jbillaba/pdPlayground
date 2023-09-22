@@ -151,6 +151,16 @@ function Player:handleMovementAndCollisions()
         self.globalFlip = 0
     end
 
+    if self.x < 0 then
+        self.gameManager:enterRoom("west")
+    elseif self.x > 400 then
+        self.gameManager:enterRoom("east")
+    elseif self.y < 0 then
+        self.gameManager:enterRoom("north")
+    elseif self.y > 240 then
+        self.gameManager:enterRoom("south")
+    end
+
     if countdownTimer.timeLeft == 0 then
         self:die()
     end

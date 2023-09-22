@@ -42,6 +42,11 @@ function GameScene:goToNextLevel()
     self:goToLevel("Level_"..currLevelNumber)
 end
 
+function GameScene:enterRoom(direction)
+    local level = ldtk.get_neighbours(self.levelName, direction)[1]
+    self:goToLevel(level)
+end
+
 function GameScene:goToLevel(level_name)
     gfx.sprite.removeAll()
     -- Countdown:createCountdownDisplay()
@@ -73,6 +78,8 @@ function GameScene:goToLevel(level_name)
         elseif entityName == "Player" then
             self.player = Player(entityX,entityY,self)
             self.player:add()
+        elseif entityName == "CompletionCake" then
+            -- maybe a function should be called ?? who knows 
         end
     end
 end
