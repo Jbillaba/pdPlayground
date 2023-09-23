@@ -2,7 +2,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local ldtk <const> = LDtk
 local inDebug <const> = false
-local currLevelNumber = 0 
+local currLevelNumber = level_name
 
 TAGS = {
 Player = 1,
@@ -32,14 +32,7 @@ end
 
 function GameScene:startGame()
     gfx.sprite.removeAll() -- remove menu sprites 
-    self:goToLevel("Level_"..currLevelNumber)
-end
-
-
-function GameScene:goToNextLevel()
-    gfx.sprite.removeAll()
-    currLevelNumber += 1 
-    self:goToLevel("Level_"..currLevelNumber)
+    self:goToLevel("Level_0")
 end
 
 function GameScene:enterRoom(direction)
@@ -79,8 +72,9 @@ function GameScene:goToLevel(level_name)
             self.player = Player(entityX,entityY,self)
             self.player:add()
         elseif entityName == "CompletionCake" then
-            -- maybe a function should be called ?? who knows 
+            -- if Cake.candlesCollected == 5  then
+                Cake(entityX,entityY,entity)
+            -- end
         end
     end
 end
-

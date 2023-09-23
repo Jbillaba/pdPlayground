@@ -1,4 +1,6 @@
 local gfx <const> = playdate.graphics
+candlesCollected = 0
+
 
 class("item").extends(gfx.sprite)
 
@@ -11,6 +13,8 @@ function item:init(x,y,entity)
     self.itemName = self.fields.Collectables
     local itemImage = gfx.image.new("images/"..self.itemName)
     assert(itemImage)
+
+    self.nextLevel = self.fields.LevelName
 
     self:setImage(itemImage)
     self:setZIndex(Z_INDEXES.Pickup)
@@ -26,8 +30,11 @@ end
 function item:pickUp(player)
     if  self.itemName == "Usb" then
         print("you got a usb")
-        GameScene:goToNextLevel()
+        GameScene:goToLevel(self.nextLevel)
     elseif self.itemName == "Candle" then
+        candlesCollected += 1 
+        GameScene:goToLevel(self.nextLevel)
+        print(candlesCollected)
         print("you got a candle !!")
     end
     self.fields.pickedUp = true

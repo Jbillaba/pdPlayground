@@ -179,7 +179,7 @@ function Player:die()
     pd.timer.performAfterDelay(200, function ()
         self:setCollisionsEnabled(true)
         self.dead = false
-        self.gameManager:resetPlayer(0)
+        self.gameManager:startGame()
         Countdown:resetTimer()
         Countdown:startTimer()
     end)
@@ -190,7 +190,7 @@ function Player:handleGroundInput()
     if self:playerJumped() then
         self:changeToJumpState()
     elseif pd.buttonIsPressed(pd.kButtonB) then
-        GameScene:resetPlayer()
+        GameScene:startGame()
     elseif pd.buttonIsPressed(pd.kButtonLeft) then
         self:changeToRunState("left")
     elseif pd.buttonIsPressed(pd.kButtonRight)  then

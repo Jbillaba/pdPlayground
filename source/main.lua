@@ -13,6 +13,7 @@ import "scripts/titleMenu"
 import "scripts/GameScene"
 import "scripts/player"
 import "scripts/items"
+import "scripts/Cake"
 import "scripts/countdown"
 
 
